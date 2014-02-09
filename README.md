@@ -3,22 +3,22 @@ Volley Request Manager
 
 #####Initialize manager :
 ```java
-  RequestManager.initializeWith(contex);
+RequestManager.initializeWith(contex);
 ```
 
 #####Choose the best way that you need :
 
 ```java
-  //Queue using default volley Response and Error listener
-  RequestManager
-        .queue()
+//Queue using default volley Response and Error listener
+RequestManager
+       .queue()
         .usingBackgroundQueue()
         .addRequest(new TestRequest(mListener, mErrorListener))
         .start();
         
   
-  //Queue using custom listener
-  RequestManager.queue()
+//Queue using custom listener
+RequestManager.queue()
         .usingBackgroundQueue()
         .addRequest(new TestJsonRequest(mRequestObserver))
         .start();    
