@@ -2,13 +2,13 @@ Volley Request Manager
 ======================
 
 #####Initialize manager :
-```
+```java
   RequestManager.initializeWith(contex);
 ```
 
 #####Choose the best way that you need :
 
-```
+```java
   //Queue using default volley Response and Error listener
   RequestManager
         .queue()
@@ -25,7 +25,7 @@ Volley Request Manager
 ```
 
 #####Custom listener implementation :
-```
+```java
 private RequestObserver mRequestObserver = new RequestObserver<JSONObject, Void>() {
     @Override
     public Void doInBackground(JSONObject response) {
