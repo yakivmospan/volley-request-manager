@@ -1,6 +1,13 @@
 Volley Request Manager
 ======================
 
+- One centralized and reusable model;
+- Possibility to use different queues;
+- Set of default queues;
+- Possibility to register your own queues;
+- Background queue and special Callback that handle result in background and UI threads;
+- More of sweet features come soon.
+
 #####Initialize manager :
 ```java
 RequestManager.initializeWith(contex);
