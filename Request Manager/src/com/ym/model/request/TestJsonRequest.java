@@ -9,9 +9,6 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 
-/**
- * Created by Jakob on 12.01.14
- */
 public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> {
 
     public TestJsonRequest(RequestCallback<JSONObject, Void> requestObserver) {

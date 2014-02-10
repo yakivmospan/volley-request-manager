@@ -4,13 +4,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.ym.volley.RequestInterface;
-import com.ym.volley.RequestObserver;
 
 import android.net.Uri;
 
-/**
- * Created by Jakob on 12.01.14
- */
 public class TestRequest extends RequestInterface<Object, String, Void> {
 
 
