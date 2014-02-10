@@ -30,12 +30,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- *
- * Created by Jake M on 10.12.13
- */
-
-/**
- * An {@link HttpStack} based on {@link java.net.HttpURLConnection}.
+ * An {@link com.android.volley.toolbox.HttpStack} based on {@link java.net.HttpURLConnection}.
  */
 class RedirectHurlStack implements HttpStack {
 

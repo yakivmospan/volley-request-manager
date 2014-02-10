@@ -1,10 +1,13 @@
-package com.defaultproject;
+package com.ym.controller;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.defaultproject.R;
+import com.ym.model.request.TestJsonRequest;
+import com.ym.model.request.TestRequest;
 import com.ym.utils.L;
+import com.ym.volley.RequestCallback;
 import com.ym.volley.RequestManager;
-import com.ym.volley.RequestObserver;
 
 import org.json.JSONObject;
 
@@ -21,12 +24,13 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_main);
 
-        RequestManager
-                .initializeWith(this)
+        //Queue using custom listener
+        RequestManager.queue()
                 .usingBackgroundQueue()
-                .addRequest(new TestJsonRequest(mRequestObserver))
+                .addRequest(new TestJsonRequest(mRequestCallback))
                 .start();
 
+        //Queue using default volley Response and Error listener
         RequestManager
                 .queue()
                 .usingBackgroundQueue()
@@ -34,7 +38,7 @@ public class MainActivity
                 .start();
     }
 
-    private RequestObserver mRequestObserver = new RequestObserver<JSONObject, Void>() {
+    private RequestCallback mRequestCallback= new RequestCallback<JSONObject, Void>() {
         @Override
         public Void doInBackground(JSONObject response) {
             L.e(response.toString());

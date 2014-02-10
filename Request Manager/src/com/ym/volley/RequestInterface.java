@@ -7,10 +7,6 @@ import com.android.volley.VolleyError;
 import android.os.Handler;
 import android.os.Looper;
 
-/**
- * Created by Yakiv M. on 12.01.14
- */
-
 public abstract class RequestInterface<DataObject, ResponseType, ResultType>
         implements Response.Listener<ResponseType>, Response.ErrorListener {
 
@@ -18,7 +14,7 @@ public abstract class RequestInterface<DataObject, ResponseType, ResultType>
 
     protected DataObject mDataObject;
 
-    private RequestObserver<ResponseType, ResultType> mRequestObserver;
+    private RequestCallback<ResponseType, ResultType> mRequestCallback;
 
     private Response.Listener<ResponseType> mResponseListener;
     private Response.ErrorListener mErrorListener;
@@ -32,14 +28,14 @@ public abstract class RequestInterface<DataObject, ResponseType, ResultType>
         mDataObject = dataObject;
     }
 
-    public RequestInterface(RequestObserver<ResponseType, ResultType> requestObserver) {
+    public RequestInterface(RequestCallback<ResponseType, ResultType> requestCallback) {
         mHandler = new Handler(Looper.getMainLooper());
-        mRequestObserver = requestObserver;
+        mRequestCallback = requestCallback;
     }
 
     public RequestInterface(DataObject dataObject,
-            RequestObserver<ResponseType, ResultType> requestObserver) {
-        this(requestObserver);
+            RequestCallback<ResponseType, ResultType> requestCallback) {
+        this(requestCallback);
         mDataObject = dataObject;
     }
 
@@ -60,12 +56,12 @@ public abstract class RequestInterface<DataObject, ResponseType, ResultType>
     public final void onResponse(ResponseType response) {
         if (mResponseListener != null) {
             mResponseListener.onResponse(response);
-        } else if (mRequestObserver != null) {
-            final ResultType resultType = mRequestObserver.doInBackground(response);
+        } else if (mRequestCallback != null) {
+            final ResultType resultType = mRequestCallback.doInBackground(response);
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mRequestObserver.onPostExecute(resultType);
+                    mRequestCallback.onPostExecute(resultType);
                 }
             });
         }
@@ -75,8 +71,8 @@ public abstract class RequestInterface<DataObject, ResponseType, ResultType>
     public final void onErrorResponse(VolleyError error) {
         if (mErrorListener != null) {
             mErrorListener.onErrorResponse(error);
-        } else if (mRequestObserver != null) {
-            mRequestObserver.onError(error);
+        } else if (mRequestCallback != null) {
+            mRequestCallback.onError(error);
         }
     }
 }

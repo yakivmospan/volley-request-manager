@@ -1,9 +1,9 @@
-package com.defaultproject;
+package com.ym.model.request;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ym.volley.RequestCallback;
 import com.ym.volley.RequestInterface;
-import com.ym.volley.RequestObserver;
 
 import org.json.JSONObject;
 
@@ -14,7 +14,7 @@ import android.net.Uri;
  */
 public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> {
 
-    public TestJsonRequest(RequestObserver<JSONObject, Void> requestObserver) {
+    public TestJsonRequest(RequestCallback<JSONObject, Void> requestObserver) {
         super(requestObserver);
     }
 

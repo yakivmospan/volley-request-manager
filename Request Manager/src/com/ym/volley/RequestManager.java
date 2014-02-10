@@ -8,16 +8,7 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Yakiv M. on 26.01.14
- */
-
 public class RequestManager {
-
-    public static final String QUEUE_DEFAULT = "com.ym.volley.QUEUE_DEFAULT";
-    public static final String QUEUE_BACKGROUND = "com.ym.volley.QUEUE_BACKGROUND";
-
-    public static final String LOADER_DEFAULT = "com.ym.volley.LOADER_DEFAULT";
 
     private static RequestManager instance;
 
@@ -30,12 +21,10 @@ public class RequestManager {
         mImageLoaderBuilder = new ImageLoaderBuilder(applicationContext);
     }
 
-    public static synchronized QueueBuilder initializeWith(Context context) {
+    public static synchronized void initializeWith(Context context) {
         if (instance == null) {
             instance = new RequestManager(context);
         }
-
-        return instance.getRequestBuilder().mQueueBuilder;
     }
 
     public static synchronized QueueBuilder queue() {
@@ -121,11 +110,11 @@ public class RequestManager {
         }
 
         public RequestBuilder usingDefaultQueue() {
-            return using(RequestManager.QUEUE_DEFAULT);
+            return using(RequestOptions.DEFAULT_QUEUE);
         }
 
         public RequestBuilder usingBackgroundQueue() {
-            return using(RequestManager.QUEUE_BACKGROUND);
+            return using(RequestOptions.BACKGROUND_QUEUE);
         }
 
         public void register(String queueName, RequestQueue requestQueue) {
@@ -138,7 +127,7 @@ public class RequestManager {
 
         private void validateQueue(String queueName) {
             if (!this.mRequestQueue.containsKey(queueName)) {
-                final RequestQueue queue = RequestQueueFabric.getQueue(mContext, queueName);
+                final RequestQueue queue = RequestQueueFactory.getQueue(mContext, queueName);
                 if (queue != null) {
                     this.mRequestQueue.put(queueName, queue);
                 } else {

@@ -20,21 +20,14 @@ import android.os.Build;
 import java.io.File;
 import java.util.concurrent.Executors;
 
-/**
- * Created by Jakob on 12.01.14
- */
-
-public class RequestQueueFabric {
-
-    public static final String REQUEST_CACHE_PATH = "com/ym/volley/request";
-    public static final int DEFAULT_POOL_SIZE = 4;
+public class RequestQueueFactory {
 
     public static RequestQueue getQueue(Context context, String name) {
         RequestQueue result = null;
 
-        if (RequestManager.QUEUE_DEFAULT.equals(name)) {
+        if (RequestOptions.DEFAULT_QUEUE.equals(name)) {
             result = getDefault(context);
-        } if (RequestManager.QUEUE_BACKGROUND.equals(name)) {
+        } if (RequestOptions.BACKGROUND_QUEUE.equals(name)) {
             result = newBackgroundQueue(context);
         }
 
@@ -46,13 +39,13 @@ public class RequestQueueFabric {
     }
 
     public static RequestQueue newBackgroundQueue(Context context) {
-        return newBackgroundQueue(context, null, DEFAULT_POOL_SIZE);
+        return newBackgroundQueue(context, null, RequestOptions.DEFAULT_POOL_SIZE);
     }
 
     public static RequestQueue newBackgroundQueue(Context context, HttpStack stack, int threadPoolSize) {
-        File cacheDir = new File(context.getCacheDir(), REQUEST_CACHE_PATH);
+        File cacheDir = new File(context.getCacheDir(), RequestOptions.REQUEST_CACHE_PATH);
 
-        String userAgent = "com/ym/volley/0";
+        String userAgent = "volley/0";
         try {
             String packageName = context.getPackageName();
             PackageInfo info = context.getPackageManager().getPackageInfo(packageName, 0);
