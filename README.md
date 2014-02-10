@@ -47,3 +47,40 @@ private RequestObserver mRequestObserver = new RequestObserver<JSONObject, Void>
     }
 };
 ```
+
+#####Request implementation example:
+```java
+public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> {
+
+    public TestJsonRequest(RequestObserver<JSONObject, Void> requestObserver) {
+        super(requestObserver);
+    }
+
+    @Override
+    public Request create() {
+
+        Uri.Builder uri = new Uri.Builder();
+        uri.scheme("http");
+        uri.authority("httpbin.org");
+        uri.path("get");
+        uri.appendQueryParameter("name", "Jon Doe");
+        uri.appendQueryParameter("age", "21");
+        String url = uri.build().toString();
+
+        Request request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                this,
+                this);
+
+        return request;
+    }
+    
+}
+```
+
+#####Add some of this constructors to use Volley Response listeners:
+```java
+
+```
