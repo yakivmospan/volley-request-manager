@@ -82,5 +82,13 @@ public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> 
 
 #####Add some of this constructors to use Volley Response listeners:
 ```java
+public TestJsonRequest(Response.Listener<JSONObject> responseListener,
+            Response.ErrorListener errorListener) {
+    super(responseListener, errorListener);
+}
 
+public TestJsonRequest(Void dataObject, Response.Listener<JSONObject> responseListener,
+            Response.ErrorListener errorListener) {
+    super(dataObject, responseListener, errorListener);
+}
 ```
