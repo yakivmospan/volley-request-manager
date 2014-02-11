@@ -29,13 +29,13 @@ RequestManager
 //Queue using custom listener
 RequestManager.queue()
         .usingBackgroundQueue()
-        .addRequest(new TestJsonRequest(mRequestObserver))
+        .addRequest(new TestJsonRequest(mRequestCallback))
         .start();    
 ```
 
 #####Custom listener implementation :
 ```java
-private RequestCallback mRequestObserver = new RequestCallback<JSONObject, Void>() {
+private RequestCallback mRequestCallback = new RequestCallback<JSONObject, Void>() {
     @Override
     public Void doInBackground(JSONObject response) {
         //triggers on called thread
