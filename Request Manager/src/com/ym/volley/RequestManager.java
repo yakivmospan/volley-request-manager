@@ -12,12 +12,12 @@ public class RequestManager {
 
     private static RequestManager instance;
 
-    private RequestControlBuilder mRequestControlBuilder;
+    private RequestController mRequestController;
     private ImageLoaderBuilder mImageLoaderBuilder;
 
     private RequestManager(Context context) {
         Context applicationContext = context.getApplicationContext();
-        mRequestControlBuilder = new RequestControlBuilder(applicationContext);
+        mRequestController = new RequestController(applicationContext);
         mImageLoaderBuilder = new ImageLoaderBuilder(applicationContext);
     }
 
@@ -32,7 +32,7 @@ public class RequestManager {
             throw new IllegalStateException(RequestManager.class.getSimpleName() +
                     " is not initialized, call initializeWith(..) method first.");
         }
-        return instance.getRequestControlBuilder().mQueueBuilder;
+        return instance.getRequestController().mQueueBuilder;
     }
 
     //Not done yet
@@ -44,22 +44,22 @@ public class RequestManager {
         return instance.getImageLoaderBuilder().mImageQueueBuilder;
     }
 
-    private RequestControlBuilder getRequestControlBuilder() {
-        return mRequestControlBuilder;
+    private RequestController getRequestController() {
+        return mRequestController;
     }
     private ImageLoaderBuilder getImageLoaderBuilder() {
         return mImageLoaderBuilder;
     }
 
-    public class RequestControlBuilder {
+    public class RequestController {
 
         private QueueBuilder mQueueBuilder;
 
-        public RequestControlBuilder(Context context) {
+        public RequestController(Context context) {
             this.mQueueBuilder = new QueueBuilder(context);
         }
 
-        public RequestControlBuilder addRequest(RequestInterface volleyRequest) {
+        public RequestController addRequest(RequestInterface volleyRequest) {
             mQueueBuilder.getRequestQueue().add(volleyRequest.create());
             return this;
         }
@@ -103,17 +103,17 @@ public class RequestManager {
             this.mContext = context;
         }
 
-        public RequestControlBuilder using(String queueName) {
+        public RequestController using(String queueName) {
             validateQueue(queueName);
             mCurQueue = queueName;
-            return mRequestControlBuilder;
+            return mRequestController;
         }
 
-        public RequestControlBuilder usingDefaultQueue() {
+        public RequestController usingDefaultQueue() {
             return using(RequestOptions.DEFAULT_QUEUE);
         }
 
-        public RequestControlBuilder usingBackgroundQueue() {
+        public RequestController usingBackgroundQueue() {
             return using(RequestOptions.BACKGROUND_QUEUE);
         }
 
