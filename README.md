@@ -35,7 +35,7 @@ RequestManager.queue()
 
 #####Custom listener implementation :
 ```java
-private RequestObserver mRequestObserver = new RequestObserver<JSONObject, Void>() {
+private RequestCallback mRequestObserver = new RequestCallback<JSONObject, Void>() {
     @Override
     public Void doInBackground(JSONObject response) {
         //triggers on called thread
@@ -61,8 +61,8 @@ private RequestObserver mRequestObserver = new RequestObserver<JSONObject, Void>
 ```java
 public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> {
 
-    public TestJsonRequest(RequestObserver<JSONObject, Void> requestObserver) {
-        super(requestObserver);
+    public TestJsonRequest(RequestCallback<JSONObject, Void> requestCallback) {
+        super(requestCallback);
     }
 
     @Override
