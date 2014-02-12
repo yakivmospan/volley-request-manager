@@ -186,7 +186,7 @@ class RedirectHurlStack implements HttpStack {
                 byte[] postBody = request.getPostBody();
                 if (postBody != null) {
                     // Prepare output. There is no need to set Content-Length explicitly,
-                    // since this is handled by HttpURLConnection using the size of the prepared
+                    // since this is handled by HttpURLConnection use the size of the prepared
                     // output stream.
                     connection.setDoOutput(true);
                     connection.setRequestMethod("POST");

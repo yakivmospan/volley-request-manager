@@ -1,6 +1,7 @@
 package com.ym.model.request;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ym.volley.RequestCallback;
 import com.ym.volley.RequestInterface;
@@ -13,6 +14,11 @@ public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> 
 
     public TestJsonRequest(RequestCallback<JSONObject, Void> requestObserver) {
         super(requestObserver);
+    }
+
+    public TestJsonRequest(Response.Listener<JSONObject> responseListener,
+            Response.ErrorListener errorListener) {
+        super(responseListener, errorListener);
     }
 
     @Override

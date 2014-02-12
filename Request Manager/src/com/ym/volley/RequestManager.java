@@ -13,12 +13,14 @@ public class RequestManager {
     private static RequestManager instance;
 
     private RequestController mRequestController;
-    private ImageLoaderBuilder mImageLoaderBuilder;
+//    private ImageLoaderBuilder mImageLoaderController;
+
+    private ImageLoaderController mImageLoaderController;
 
     private RequestManager(Context context) {
         Context applicationContext = context.getApplicationContext();
         mRequestController = new RequestController(applicationContext);
-        mImageLoaderBuilder = new ImageLoaderBuilder(applicationContext);
+        mImageLoaderController = new ImageLoaderController(applicationContext);
     }
 
     public static synchronized void initializeWith(Context context) {
@@ -36,19 +38,19 @@ public class RequestManager {
     }
 
     //Not done yet
-    private static synchronized ImageQueueBuilder loader() {
+    public static synchronized ImageQueueBuilder loader() {
         if (instance == null) {
             throw new IllegalStateException(RequestManager.class.getSimpleName() +
                     " is not initialized, call initializeWith(..) method first.");
         }
-        return instance.getImageLoaderBuilder().mImageQueueBuilder;
+        return instance.getImageLoaderController().mImageQueueBuilder;
     }
 
     private RequestController getRequestController() {
         return mRequestController;
     }
-    private ImageLoaderBuilder getImageLoaderBuilder() {
-        return mImageLoaderBuilder;
+    private ImageLoaderController getImageLoaderController() {
+        return mImageLoaderController;
     }
 
     public class RequestController {
@@ -81,13 +83,23 @@ public class RequestManager {
         }
     }
 
-
-    public class ImageLoaderBuilder {
+    public class ImageLoaderController {
 
         private ImageQueueBuilder mImageQueueBuilder;
 
-        public ImageLoaderBuilder(Context context) {
+        public ImageLoaderController(Context context) {
             this.mImageQueueBuilder = new ImageQueueBuilder(context);
+        }
+
+        public ImageLoader obtain() {
+            return this.mImageQueueBuilder.getLoader();
+        }
+
+        public void clearCache() {
+            final BitmapLruCache cache = this.mImageQueueBuilder.getCache();
+            if (cache != null) {
+                cache.evictAll();
+            }
         }
     }
 
@@ -103,18 +115,18 @@ public class RequestManager {
             this.mContext = context;
         }
 
-        public RequestController using(String queueName) {
+        public RequestController use(String queueName) {
             validateQueue(queueName);
             mCurQueue = queueName;
             return mRequestController;
         }
 
-        public RequestController usingDefaultQueue() {
-            return using(RequestOptions.DEFAULT_QUEUE);
+        public RequestController useDefaultQueue() {
+            return use(RequestOptions.DEFAULT_QUEUE);
         }
 
-        public RequestController usingBackgroundQueue() {
-            return using(RequestOptions.BACKGROUND_QUEUE);
+        public RequestController useBackgroundQueue() {
+            return use(RequestOptions.BACKGROUND_QUEUE);
         }
 
         public void register(String queueName, RequestQueue requestQueue) {
@@ -156,18 +168,20 @@ public class RequestManager {
             this.mContext = context;
         }
 
-        public ImageLoaderBuilder loadUsing(String loaderName) {
-            mCurLoader = loaderName;
-            return mImageLoaderBuilder;
-        }
-
-        public void register(String loaderName, ImageLoader imageLoader) {
-            if (this.mLoaders.containsKey(loaderName)) {
+        public ImageLoaderController use(String loaderName) {
+            if (!this.mLoaders.containsKey(loaderName)) {
                 throw new IllegalArgumentException(
-                        "ImageLoader - \"" + loaderName + "\" already exists!");
+                        "ImageLoader - \"" + loaderName + "\" doesn't exists!");
             }
 
-            this.mLoaders.put(loaderName, imageLoader);
+            mCurLoader = loaderName;
+            return mImageLoaderController;
+        }
+
+        public ImageLoaderController useDefaultLoader() {
+            createDefaultLoader();
+            mCurLoader = RequestOptions.DEFAULT_LOADER;
+            return mImageLoaderController;
         }
 
         public void register(String loaderName, RequestQueue queue, BitmapLruCache bitmapLruCache) {
@@ -180,16 +194,23 @@ public class RequestManager {
             this.mLoaders.put(loaderName, new ImageLoader(queue, bitmapLruCache));
         }
 
-//        private void validateQueue(String loader) {
-//            if (!this.mLoaders.containsKey(loader)) {
-//                final ImageLoader imageLoader = ImageLoadersFabric.getLoader(mContext, loader);
-//                if (imageLoader != null) {
-//                    this.mRequestQueue.put(queueName, queue);
-//                } else {
-//                    throw new IllegalArgumentException(
-//                            "ImageLoader - \"" + loader + "\" doesn't exists!");
-//                }
-//            }
-//        }
+        private void createDefaultLoader() {
+            if (!this.mLoaders.containsKey(RequestOptions.DEFAULT_LOADER)) {
+
+                final BitmapLruCache bitmapLruCache = new BitmapLruCache();
+                final ImageLoader imageLoader = ImageLoaderFactory
+                        .newLoader(mContext, bitmapLruCache);
+
+                mLoaders.put(RequestOptions.DEFAULT_LOADER, imageLoader);
+                mCaches.put(RequestOptions.DEFAULT_LOADER, bitmapLruCache);
+            }
+        }
+
+        public BitmapLruCache getCache() {
+            return mCaches.get(mCurLoader);
+        }
+        public ImageLoader getLoader() {
+            return mLoaders.get(mCurLoader);
+        }
     }
 }
