@@ -56,7 +56,7 @@ public class RequestManager {
         private QueueBuilder mQueueBuilder;
 
         public RequestController(Context context) {
-            this.mQueueBuilder = new QueueBuilder(context);
+            mQueueBuilder = new QueueBuilder(context);
         }
 
         public RequestController addRequest(RequestInterface volleyRequest) {
@@ -65,19 +65,19 @@ public class RequestManager {
         }
 
         public void start() {
-            this.mQueueBuilder.getRequestQueue().start();
+            mQueueBuilder.getRequestQueue().start();
         }
 
         public void stop() {
-            this.mQueueBuilder.getRequestQueue().stop();
+            mQueueBuilder.getRequestQueue().stop();
         }
 
         public void cancelAll(Object tag) {
-            this.mQueueBuilder.getRequestQueue().cancelAll(tag);
+            mQueueBuilder.getRequestQueue().cancelAll(tag);
         }
 
         public void cancelAll(RequestQueue.RequestFilter requestFilter) {
-            this.mQueueBuilder.getRequestQueue().cancelAll(requestFilter);
+            mQueueBuilder.getRequestQueue().cancelAll(requestFilter);
         }
     }
 
@@ -86,15 +86,15 @@ public class RequestManager {
         private ImageQueueBuilder mImageQueueBuilder;
 
         public ImageLoaderController(Context context) {
-            this.mImageQueueBuilder = new ImageQueueBuilder(context);
+            mImageQueueBuilder = new ImageQueueBuilder(context);
         }
 
         public ImageLoader obtain() {
-            return this.mImageQueueBuilder.getLoader();
+            return mImageQueueBuilder.getLoader();
         }
 
         public void clearCache() {
-            final BitmapLruCache cache = this.mImageQueueBuilder.getCache();
+            final BitmapLruCache cache = mImageQueueBuilder.getCache();
             if (cache != null) {
                 cache.evictAll();
             }
@@ -110,7 +110,7 @@ public class RequestManager {
         private String mCurQueue;
 
         public QueueBuilder(Context context) {
-            this.mContext = context;
+            mContext = context;
         }
 
         public RequestController use(String queueName) {
@@ -127,19 +127,19 @@ public class RequestManager {
             return use(RequestOptions.BACKGROUND_QUEUE);
         }
 
-        public void register(String queueName, RequestQueue requestQueue) {
-            if (this.mRequestQueue.containsKey(queueName)) {
+        public void create(String queueName, RequestQueue requestQueue) {
+            if (mRequestQueue.containsKey(queueName)) {
                 throw new IllegalArgumentException(
                         "RequestQueue - \"" + queueName + "\" already exists!");
             }
-            this.mRequestQueue.put(queueName, requestQueue);
+            mRequestQueue.put(queueName, requestQueue);
         }
 
         private void validateQueue(String queueName) {
-            if (!this.mRequestQueue.containsKey(queueName)) {
+            if (!mRequestQueue.containsKey(queueName)) {
                 final RequestQueue queue = RequestQueueFactory.getQueue(mContext, queueName);
                 if (queue != null) {
-                    this.mRequestQueue.put(queueName, queue);
+                    mRequestQueue.put(queueName, queue);
                 } else {
                     throw new IllegalArgumentException(
                             "RequestQueue - \"" + queueName + "\" doesn't exists!");
@@ -163,11 +163,11 @@ public class RequestManager {
         private String mCurLoader;
 
         public ImageQueueBuilder(Context context) {
-            this.mContext = context;
+            mContext = context;
         }
 
         public ImageLoaderController use(String loaderName) {
-            if (!this.mLoaders.containsKey(loaderName)) {
+            if (!mLoaders.containsKey(loaderName)) {
                 throw new IllegalArgumentException(
                         "ImageLoader - \"" + loaderName + "\" doesn't exists!");
             }
@@ -182,18 +182,18 @@ public class RequestManager {
             return mImageLoaderController;
         }
 
-        public void register(String loaderName, RequestQueue queue, BitmapLruCache bitmapLruCache) {
-            if (this.mLoaders.containsKey(loaderName)) {
+        public void create(String loaderName, RequestQueue queue, BitmapLruCache bitmapLruCache) {
+            if (mLoaders.containsKey(loaderName)) {
                 throw new IllegalArgumentException(
                         "ImageLoader - \"" + loaderName + "\" already exists!");
             }
 
-            this.mCaches.put(loaderName, bitmapLruCache);
-            this.mLoaders.put(loaderName, new ImageLoader(queue, bitmapLruCache));
+            mCaches.put(loaderName, bitmapLruCache);
+            mLoaders.put(loaderName, new ImageLoader(queue, bitmapLruCache));
         }
 
         private void createDefaultLoader() {
-            if (!this.mLoaders.containsKey(RequestOptions.DEFAULT_LOADER)) {
+            if (!mLoaders.containsKey(RequestOptions.DEFAULT_LOADER)) {
 
                 final BitmapLruCache bitmapLruCache = new BitmapLruCache();
                 final ImageLoader imageLoader = ImageLoaderFactory
