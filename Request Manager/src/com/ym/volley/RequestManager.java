@@ -13,7 +13,6 @@ public class RequestManager {
     private static RequestManager instance;
 
     private RequestController mRequestController;
-//    private ImageLoaderBuilder mImageLoaderController;
 
     private ImageLoaderController mImageLoaderController;
 
@@ -37,7 +36,6 @@ public class RequestManager {
         return instance.getRequestController().mQueueBuilder;
     }
 
-    //Not done yet
     public static synchronized ImageQueueBuilder loader() {
         if (instance == null) {
             throw new IllegalStateException(RequestManager.class.getSimpleName() +

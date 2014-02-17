@@ -5,7 +5,6 @@ import com.android.volley.toolbox.ImageLoader;
 
 import android.content.Context;
 
-//Not done yet
 class ImageLoaderFactory {
 
     public static ImageLoader getDefault(Context context) {
