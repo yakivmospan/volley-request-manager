@@ -1,6 +1,7 @@
 package com.ym.volley;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.ImageLoader;
 
 import android.content.Context;
@@ -47,6 +48,7 @@ public class RequestManager {
     private RequestController getRequestController() {
         return mRequestController;
     }
+
     private ImageLoaderController getImageLoaderController() {
         return mImageLoaderController;
     }
@@ -59,7 +61,17 @@ public class RequestManager {
             mQueueBuilder = new QueueBuilder(context);
         }
 
-        public RequestController addRequest(RequestInterface volleyRequest) {
+        public RequestController addRequest(RequestInterface volleyRequest,
+                RequestCallback requestCallback) {
+            volleyRequest.setRequestCallback(requestCallback);
+            mQueueBuilder.getRequestQueue().add(volleyRequest.create());
+            return this;
+        }
+
+        public RequestController addRequest(RequestInterface volleyRequest,
+                Response.Listener responseListener, Response.ErrorListener errorListener) {
+            volleyRequest.setResponseListener(responseListener);
+            volleyRequest.setErrorListener(errorListener);
             mQueueBuilder.getRequestQueue().add(volleyRequest.create());
             return this;
         }
@@ -207,6 +219,7 @@ public class RequestManager {
         public BitmapLruCache getCache() {
             return mCaches.get(mCurLoader);
         }
+
         public ImageLoader getLoader() {
             return mLoaders.get(mCurLoader);
         }

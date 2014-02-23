@@ -31,14 +31,14 @@ public class MainActivity
         //Queue use custom listener
         RequestManager.queue()
                 .useBackgroundQueue()
-                .addRequest(new TestJsonRequest(mRequestCallback))
+                .addRequest(new TestJsonRequest(), mRequestCallback)
                 .start();
 
         //Queue use default volley Response and Error listener
         RequestManager
                 .queue()
                 .useBackgroundQueue()
-                .addRequest(new TestJsonRequest(mListener, mErrorListener))
+                .addRequest(new TestJsonRequest(), mListener, mErrorListener)
                 .start();
 
         RequestManager
@@ -56,7 +56,7 @@ public class MainActivity
 
                                 BitmapDrawable bitmapDrawable = new BitmapDrawable(
                                         response.getBitmap());
-                                findViewById(R.id.txtHello).setBackground(bitmapDrawable);
+                                findViewById(R.id.txtHello).setBackgroundDrawable(bitmapDrawable);
                             }
                             @Override
                             public void onErrorResponse(VolleyError error) {

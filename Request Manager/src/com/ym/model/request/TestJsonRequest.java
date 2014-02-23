@@ -10,20 +10,10 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 
-public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> {
-
-    public TestJsonRequest(RequestCallback<JSONObject, Void> requestObserver) {
-        super(requestObserver);
-    }
-
-    public TestJsonRequest(Response.Listener<JSONObject> responseListener,
-            Response.ErrorListener errorListener) {
-        super(responseListener, errorListener);
-    }
+public class TestJsonRequest extends RequestInterface<JSONObject, Void> {
 
     @Override
     public Request create() {
-
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http");
         uri.authority("httpbin.org");
@@ -36,8 +26,8 @@ public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> 
                 Request.Method.GET,
                 url,
                 null,
-                this,
-                this);
+                useInterfaceListener(),
+                useInterfaceErrorListener());
 
         return request;
     }

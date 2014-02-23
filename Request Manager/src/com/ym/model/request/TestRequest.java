@@ -7,13 +7,8 @@ import com.ym.volley.RequestInterface;
 
 import android.net.Uri;
 
-public class TestRequest extends RequestInterface<Object, String, Void> {
+public class TestRequest extends RequestInterface<String, Void> {
 
-
-    public TestRequest(Response.Listener<String> responseListener,
-            Response.ErrorListener errorListener) {
-        super(responseListener, errorListener);
-    }
     @Override
     public Request create() {
 
@@ -26,8 +21,8 @@ public class TestRequest extends RequestInterface<Object, String, Void> {
         Request request = new StringRequest(
                 Request.Method.POST,
                 url,
-                this,
-                this);
+                useInterfaceListener(),
+                useInterfaceErrorListener());
 
         return request;
     }

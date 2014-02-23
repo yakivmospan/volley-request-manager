@@ -7,72 +7,65 @@ import com.android.volley.VolleyError;
 import android.os.Handler;
 import android.os.Looper;
 
-public abstract class RequestInterface<DataObject, ResponseType, ResultType>
-        implements Response.Listener<ResponseType>, Response.ErrorListener {
+public abstract class RequestInterface<ResponseType, ResultType> {
 
     protected Handler mHandler;
-
-    protected DataObject mDataObject;
-
     private RequestCallback<ResponseType, ResultType> mRequestCallback;
-
     private Response.Listener<ResponseType> mResponseListener;
     private Response.ErrorListener mErrorListener;
 
+    public RequestInterface() {
+        mHandler = new Handler(Looper.getMainLooper());
+    }
+
     public abstract Request create();
 
-    public RequestInterface() {
+    private Response.Listener<ResponseType> mInterfaceListener
+            = new Response.Listener<ResponseType>() {
+        @Override
+        public void onResponse(ResponseType response) {
+            if (mResponseListener != null) {
+                mResponseListener.onResponse(response);
+            } else if (mRequestCallback != null) {
+                final ResultType resultType = mRequestCallback.doInBackground(response);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRequestCallback.onPostExecute(resultType);
+                    }
+                });
+            }
+        }
+    };
+
+    private Response.ErrorListener mInterfaceErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (mErrorListener != null) {
+                mErrorListener.onErrorResponse(error);
+            } else if (mRequestCallback != null) {
+                mRequestCallback.onError(error);
+            }
+        }
+    };
+
+    public final Response.Listener<ResponseType> useInterfaceListener() {
+        return mInterfaceListener;
     }
 
-    public RequestInterface(DataObject dataObject) {
-        mDataObject = dataObject;
+    public final Response.ErrorListener useInterfaceErrorListener() {
+        return mInterfaceErrorListener;
     }
 
-    public RequestInterface(RequestCallback<ResponseType, ResultType> requestCallback) {
-        mHandler = new Handler(Looper.getMainLooper());
+    final void setRequestCallback(RequestCallback<ResponseType, ResultType> requestCallback) {
         mRequestCallback = requestCallback;
     }
 
-    public RequestInterface(DataObject dataObject,
-            RequestCallback<ResponseType, ResultType> requestCallback) {
-        this(requestCallback);
-        mDataObject = dataObject;
-    }
-
-    public RequestInterface(Response.Listener<ResponseType> responseListener,
-            Response.ErrorListener errorListener) {
+    final void setResponseListener(Response.Listener<ResponseType> responseListener) {
         mResponseListener = responseListener;
+    }
+
+    final void setErrorListener(Response.ErrorListener errorListener) {
         mErrorListener = errorListener;
-    }
-
-    public RequestInterface(DataObject dataObject, Response.Listener<ResponseType> responseListener,
-            Response.ErrorListener errorListener) {
-        mDataObject = dataObject;
-        mResponseListener = responseListener;
-        mErrorListener = errorListener;
-    }
-
-    @Override
-    public final void onResponse(ResponseType response) {
-        if (mResponseListener != null) {
-            mResponseListener.onResponse(response);
-        } else if (mRequestCallback != null) {
-            final ResultType resultType = mRequestCallback.doInBackground(response);
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRequestCallback.onPostExecute(resultType);
-                }
-            });
-        }
-    }
-
-    @Override
-    public final void onErrorResponse(VolleyError error) {
-        if (mErrorListener != null) {
-            mErrorListener.onErrorResponse(error);
-        } else if (mRequestCallback != null) {
-            mRequestCallback.onError(error);
-        }
     }
 }
