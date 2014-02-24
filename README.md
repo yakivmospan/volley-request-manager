@@ -1,5 +1,6 @@
 Volley Request Manager
 ======================
+[Volley Request Manager article][1]
 
  - Easy and reusable interface
  - Possibility to use different queues
@@ -104,3 +105,6 @@ public class TestJsonRequest extends RequestInterface<JSONObject, Void> {
     }
 }
 ```
+
+
+  [1]: https://github.com/yakivmospan/yakivmospan/blob/master/articles/Volley%20Request%20Manager.md
