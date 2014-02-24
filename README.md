@@ -32,6 +32,22 @@ RequestManager
         .useBackgroundQueue()
         .addRequest(new TestJsonRequest(), mListener, mErrorListener)
         .start();
+        
+//load image
+ RequestManager
+            .loader()
+            .useDefaultLoader()
+            .obtain()
+            .get(
+                    "http://farm6.staticflickr.com/5475/10375875123_75ce3080c6_b.jpg",
+                    mImageListener
+            );
+            
+//clear chache
+ RequestManager
+            .loader()
+            .useDefaultLoader()
+            .clearCache();        
 ```
 
 #####Custom listener implementation :
