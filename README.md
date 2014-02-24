@@ -1,14 +1,16 @@
 Volley Request Manager
 ======================
 
-- One centralized and reusable model
-- Possibility to use different queues
-- Background and volley default queues implementations
-- Possibility to create your own queues
-- Factory that will help to create your own queues
-- Callback that handle result in background and deliver result in UI thread
-- Possibility to use default Volley Listeners
-- More of sweet features come soon
+ - Easy and reusable interface
+ - Possibility to use different queues
+ - Background and volley default queues implementations
+ - Possibility to create your own queues
+ - Factory that will help to create your own queues
+ - Callback that handle result in background and deliver result in UI thread
+ - Possibility to use default Volley Listeners
+ - Load Images with different Image Loaders
+ - Factory that will help to create your own Image Loader
+ - Possibility to clear Image Loader memory cache
 
 #####Initialize manager :
 ```java
@@ -18,19 +20,18 @@ RequestManager.initializeWith(contex);
 #####Choose the best way that you need :
 
 ```java
-//Queue using default volley Response and Error listener
-RequestManager
-       .queue()
-        .usingBackgroundQueue()
-        .addRequest(new TestRequest(mListener, mErrorListener))
-        .start();
-        
-  
 //Queue using custom listener
 RequestManager.queue()
-        .usingBackgroundQueue()
-        .addRequest(new TestJsonRequest(mRequestCallback))
-        .start();    
+        .useBackgroundQueue()
+        .addRequest(new TestJsonRequest(), mRequestCallback)
+        .start();
+        
+//Queue using default volley Response and Error listener
+RequestManager
+        .queue()
+        .useBackgroundQueue()
+        .addRequest(new TestJsonRequest(), mListener, mErrorListener)
+        .start();
 ```
 
 #####Custom listener implementation :
@@ -59,15 +60,10 @@ private RequestCallback mRequestCallback = new RequestCallback<JSONObject, Void>
 
 #####Request implementation example:
 ```java
-public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> {
-
-    public TestJsonRequest(RequestCallback<JSONObject, Void> requestCallback) {
-        super(requestCallback);
-    }
+public class TestJsonRequest extends RequestInterface<JSONObject, Void> {
 
     @Override
     public Request create() {
-
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http");
         uri.authority("httpbin.org");
@@ -80,24 +76,15 @@ public class TestJsonRequest extends RequestInterface<Object, JSONObject, Void> 
                 Request.Method.GET,
                 url,
                 null,
-                this,
-                this);
-
+                
+                //if you want to use Callbacks provided
+                //via Request Manager interface
+                //use useInterfaceListener() and useInterfaceErrorListener()
+                //instead of creating new listenets here
+                
+                useInterfaceListener(),
+                useInterfaceErrorListener());
         return request;
     }
-    
-}
-```
-
-#####Add some of this constructors to use Volley Response listeners:
-```java
-public TestJsonRequest(Response.Listener<JSONObject> responseListener,
-            Response.ErrorListener errorListener) {
-    super(responseListener, errorListener);
-}
-
-public TestJsonRequest(Void dataObject, Response.Listener<JSONObject> responseListener,
-            Response.ErrorListener errorListener) {
-    super(dataObject, responseListener, errorListener);
 }
 ```
