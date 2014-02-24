@@ -43,7 +43,7 @@ RequestManager
                     mImageListener
             );
             
-//clear chache
+//clear cache
  RequestManager
             .loader()
             .useDefaultLoader()
