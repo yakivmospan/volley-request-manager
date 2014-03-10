@@ -107,4 +107,4 @@ public class TestJsonRequest extends RequestInterface<JSONObject, Void> {
 ```
 
 
-  [1]: https://github.com/yakivmospan/yakivmospan/blob/master/articles/Volley%20Request%20Manager.md
+  [1]: http://yakivmospan.wordpress.com/2014/03/04/volley-request-manager/
